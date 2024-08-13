@@ -40,18 +40,18 @@ try:
 except ImportError:
     from subprocess import getoutput
 
-try:
-    raw_input
-except NameError:
-    import builtins
-
-    original_input = builtins.input
-    del builtins.input
-
-    def raw_input(*args, **kwargs):
-        return original_input(*args, **kwargs)
-
-    builtins.raw_input = raw_input
+#try:
+#    raw_input
+#except NameError:
+#    import builtins
+#
+#    original_input = builtins.input
+#    del builtins.input
+#
+#    def raw_input(*args, **kwargs):
+#        return original_input(*args, **kwargs)
+#
+#    builtins.raw_input = raw_input
 
 tui = 1
 tui_focus = 0
@@ -79,7 +79,7 @@ def menu_account(accounts,last_selection):
                 if(i==last_selection):
                     sys.stdout.write('->')
                 print('\t%d. %s'%(i+1,acc))
-            inputstring = raw_input("
+            inputstring = input("
 Help:\tadd user@host\t del <id>
 Choose 1-%d or press Enter: "%(i+1))
             if not inputstring:
@@ -98,18 +98,17 @@ Choose 1-%d or press Enter: "%(i+1))
                         return -1
                     elif inputstring.startswith('h'):
                         print('HELP')
-                        raw_input('Press Enter to continue...')
+                        input('Press Enter to continue...')
                     elif inputstring.startswith('a'):
                         print('adding')
                         try:
                             account=inputstring.split(' ',1)[1]
                             accounts.append(account)
-                            f = open(accountsfile,'a')
-                            f.write('
+                            with open(accountsfile,'a') as f:
+                                f.write('
 '+account.strip())
-                            f.close()
                         except:
-                            raw_input('Usage: add user@host')
+                            input('Usage: add user@host')
                     elif inputstring.startswith('d'):
                         print('deleting')
                         try:
@@ -187,7 +186,7 @@ def menu_tmp(preselect=None):
                         break
                     print2ui('UI: Out of range')
                     os.system('clear')
-                except:
+                except ValueError:  # Specify the exception type
                     command = inputstring
                     break
             else:
@@ -198,15 +197,13 @@ def menu_tmp(preselect=None):
         except EOFError:
             command = "quit"
             return command
-        except:
+        except Exception as e:  # Changed to Python 3 syntax
             if choice == "":
                 choice = 1
                 break
             tries += 1
             choice = ""
-            sys.stderr.write("""
-ERROR: Invalid input
-""")
+            sys.stderr.write(f"\nERROR: Invalid input: {str(e)}\n")
             None
 
     if inputstring:
