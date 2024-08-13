@@ -1,0 +1,4 @@
+[submodule "escreen"]
+	path = escreen
+	url = ../escreen
+	branch = escreen

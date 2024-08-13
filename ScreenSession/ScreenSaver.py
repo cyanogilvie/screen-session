@@ -49,9 +49,6 @@ class ScreenSaver(object):
     basedir = ""
     projectsdir = ".screen-sessions"
     savedir = ""
-    MAXWIN = -1
-    MAXWIN_REAL = -1
-    MINWIN_REAL = 0
     force = False
     enable_layout = False
     exact = False
@@ -270,19 +267,17 @@ class ScreenSaver(object):
         self.command_at(True, 'setenv SCREENSESSION %s' % os.path.join(self.basedir, self.savedir) )
 
         wins = []
-        for id in range(0, int(self.MAXWIN_REAL)):
-            try:
-                filename = os.path.join(self.basedir, self.savedir,
-                        "win_" + str(id))
-                if os.path.exists(filename):
-                    f = open(filename)
-                    win = list(f)[0:9]
-                    f.close()
-                    win = [x.strip() for x in win]
-                    try:
-                        nproc = win[8]
-                    except:
-                        nproc = '0'
+        savedir_path = os.path.join(self.basedir, self.savedir)
+
+        for filename in os.listdir(savedir_path):
+            if filename.startswith("win_") and filename[4:].isdigit():
+                try:
+                    file_path = os.path.join(savedir_path, filename)
+                    with open(file_path, 'r') as f:
+                        win = [line.strip() for line in f.readlines()[:9]]
+
+                    nproc = win[8] if len(win) > 8 else '0'
+
                     wins.append((
                         win[0],
                         win[1],
@@ -293,9 +288,10 @@ class ScreenSaver(object):
                         win[6],
                         win[7],
                         nproc,
-                        ))
-            except Exception,x:
-                sys.stderr.write('%d Unable to load window ( %s )\n' %
+                    ))
+                except Exception,x:
+                    id = filename[4:]  # Extract the id from the filename
+                    sys.stderr.write('%d Unable to load window ( %s )\n' %
                         (id, str(x)))
 
         try:
@@ -616,10 +612,6 @@ class ScreenSaver(object):
     def tty(self, win="-1"):
         msg = self.query_at('tty', win)
         return msg
-
-    def maxwin(self):
-        msg = self.query_at('maxwin')
-        return int(msg.split(':')[1].strip())
 
     '''
     def get_info(self,win):
