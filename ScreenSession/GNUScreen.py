@@ -431,7 +431,7 @@ def sort_by_ppid(cpids):
     ncpids = []
     for (i, pid) in enumerate(cpids):
         try:
-            ppid = subprocess.Popen('ps -p %s -o ppid' % pid, shell=True, universal_newlines=True,
+            ppid = subprocess.Popen('ps -p %s -o ppid' % pid, shell=True, text=True,
                                     stdout=subprocess.PIPE).communicate()[0].strip().split('\n')[1].strip()
             cppids[pid] = ppid
             ncpids.append(pid)
@@ -554,8 +554,7 @@ def _get_tty_pids_pgrep(_ctty):
 
 
 def get_session_list():
-    w = subprocess.Popen('%s -ls' % SCREEN, shell=True,
-                         universal_newlines=True,
+    w = subprocess.Popen('%s -ls' % SCREEN, shell=True, text=True,
                          stdout=subprocess.PIPE).communicate()[0]
     if w.startswith('No Sockets'):
         return []
@@ -631,8 +630,7 @@ def get_windows(session=None):
     else:
         screen = SCREEN + " "
 
-    return subprocess.Popen('%s -Q @windows' % screen, shell=True,
-                            universal_newlines=True,
+    return subprocess.Popen('%s -Q @windows' % screen, shell=True, text=True,
                             stdout=subprocess.PIPE).communicate()[0]
 
 
@@ -677,7 +675,7 @@ def get_current_window(session=None):
     else:
         screen = SCREEN + " "
     return int(subprocess.Popen('%s -p - -Q @number' % screen, shell=True,
-               universal_newlines=True,
+               text=True,
                stdout=subprocess.PIPE).communicate()[0].split(" ", 1)[0])
 
 

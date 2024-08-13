@@ -55,8 +55,7 @@ def _timeout_command_split(command, timeout):
     cmd = shlex.split(command)
     start = datetime.datetime.now()
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
-                               universal_newlines=True,
-                               stderr=subprocess.PIPE)
+                               text=True, stderr=subprocess.PIPE)
     while process.poll() is None:
         time.sleep(0.0001)
         now = datetime.datetime.now()
@@ -78,8 +77,7 @@ def timeout_command_list(command, timeout):
     import signal
     start = datetime.datetime.now()
     process = subprocess.Popen(command, stdout=subprocess.PIPE,
-                               universal_newlines=True,
-                               stderr=subprocess.PIPE)
+                               text=True, stderr=subprocess.PIPE)
     while process.poll() is None:
         time.sleep(0.0001)
         now = datetime.datetime.now()
