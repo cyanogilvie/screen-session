@@ -115,17 +115,16 @@ Choose 1-%d or press Enter: "%(i+1))
                         try:
                             i = int(inputstring.split(' ',1)[1])
                             if i > 1:
-                                f = open(accountsfile,'r')
-                                paccounts=map(string.strip,f.readlines())
-                                f.close()
+                                with open(accountsfile,'r') as f:
+                                    paccounts = [line.strip() for f in f.readlines()]
                                 accounts=[accounts[0]]
                                 for a in paccounts:
                                     if a:
                                         accounts.append(a)
                                 accounts.pop(i-1)
-                                f = open(accountsfile,'w')
-                                for a in accounts[1:]:
-                                    f.write(a+'
+                                with open(accountsfile,'w') as f:
+                                    for a in accounts[1:]:
+                                        f.write(a+'
 ')
                         except:
                             print('Usage: del <id>')
@@ -776,7 +775,7 @@ def main():
         while True:
             #if bMenuRemote:
             #    f = open(accountsfile, 'r')
-            #    accounts_tmp = map(string.strip, f.readlines())
+            #    accounts_tmp = [line.strip() for line in f.readlines]
             #    accounts = ['%s@%s' % (USER, HOSTNAME)]
             #    for a in accounts_tmp:
             #        if a:

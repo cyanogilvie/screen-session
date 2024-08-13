@@ -54,8 +54,9 @@ def _timeout_command_split(command, timeout):
     import signal
     cmd = shlex.split(command)
     start = datetime.datetime.now()
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=
-                               subprocess.PIPE)
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+                               universal_newlines=True,
+                               stderr=subprocess.PIPE)
     while process.poll() is None:
         time.sleep(0.0001)
         now = datetime.datetime.now()
@@ -76,8 +77,9 @@ def timeout_command_list(command, timeout):
     import time
     import signal
     start = datetime.datetime.now()
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=
-                               subprocess.PIPE)
+    process = subprocess.Popen(command, stdout=subprocess.PIPE,
+                               universal_newlines=True,
+                               stderr=subprocess.PIPE)
     while process.poll() is None:
         time.sleep(0.0001)
         now = datetime.datetime.now()
@@ -345,7 +347,7 @@ def find_in_path(file, path=None):
     if path is None:
         path = os.environ.get('PATH', "")
     if type(path) is type(""):
-        path = string.split(path, os.pathsep)
+        path = path.split(os.pathsep)
     return list(filter(os.path.exists, list(map(lambda dir, file=file: os.path.join(dir,
                   file), path))))
 

@@ -318,9 +318,9 @@ def gen_all_windows_full(session, datadir, reverse=False, sort=False):
         except:
             (cwin, cgroupid, ctty) = line.strip().split(" ")
             ctitle = None
-        (cwin, ctime, cgroup, ctype, ctitle, cfilter, cscroll, cmdargs) = \
-            list(map(string.strip, open(os.path.join(datadir, 'win_' +
-                 cwin), "r").readlines()))
+        with open(os.path.join(datadir, 'win_' + cwin), "r") as file:
+            (cwin, ctime, cgroup, ctype, ctitle, cfilter, cscroll, cmdargs) = \
+                [line.strip() for line in file.readlines()]
         if ctty[0] == 'z':  # zombie
             ctypeid = -1
         elif ctype[0] == 'g':
@@ -431,7 +431,7 @@ def sort_by_ppid(cpids):
     ncpids = []
     for (i, pid) in enumerate(cpids):
         try:
-            ppid = subprocess.Popen('ps -p %s -o ppid' % pid, shell=True,
+            ppid = subprocess.Popen('ps -p %s -o ppid' % pid, shell=True, universal_newlines=True,
                                     stdout=subprocess.PIPE).communicate()[0].strip().split('\n')[1].strip()
             cppids[pid] = ppid
             ncpids.append(pid)
@@ -554,8 +554,9 @@ def _get_tty_pids_pgrep(_ctty):
 
 
 def get_session_list():
-    w = subprocess.Popen('%s -ls' % SCREEN, shell=True, stdout=
-                         subprocess.PIPE).communicate()[0]
+    w = subprocess.Popen('%s -ls' % SCREEN, shell=True,
+                         universal_newlines=True,
+                         stdout=subprocess.PIPE).communicate()[0]
     if w.startswith('No Sockets'):
         return []
 
@@ -631,6 +632,7 @@ def get_windows(session=None):
         screen = SCREEN + " "
 
     return subprocess.Popen('%s -Q @windows' % screen, shell=True,
+                            universal_newlines=True,
                             stdout=subprocess.PIPE).communicate()[0]
 
 
@@ -675,6 +677,7 @@ def get_current_window(session=None):
     else:
         screen = SCREEN + " "
     return int(subprocess.Popen('%s -p - -Q @number' % screen, shell=True,
+               universal_newlines=True,
                stdout=subprocess.PIPE).communicate()[0].split(" ", 1)[0])
 
 
