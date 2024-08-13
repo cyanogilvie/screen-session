@@ -24,6 +24,8 @@ import re
 import sys
 import platform
 from util import tmpdir, tmpdir_source, removeit, remove
+from six.moves import map
+from six.moves import range
 
 SCREEN = os.getenv('SCREENBIN')
 if not SCREEN:
@@ -441,7 +443,7 @@ def sort_by_ppid(cpids):
     pid_tail_c = -1
     cpids_sort = []
     for (i, pid) in enumerate(cpids):
-        if cppids[pid] not in cppids.keys():
+        if cppids[pid] not in list(cppids.keys()):
             cpids_sort.append(pid)
             pid_tail = pid
             break

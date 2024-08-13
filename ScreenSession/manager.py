@@ -34,6 +34,7 @@ import util
 from util import tmpdir
 from ScreenSaver import ScreenSaver
 from help import VERSION
+from six.moves import input
 try:
     from commands import getoutput
 except ImportError:
@@ -175,7 +176,7 @@ def menu_tmp(preselect=None):
             if preselect:
                 inputstring = preselect
             else:
-                inputstring = raw_input("\nChoose 1-%d or ?: " % (i - 1))
+                inputstring = input("\nChoose 1-%d or ?: " % (i - 1))
             if inputstring:
                 try:
                     choice = int(inputstring)
@@ -238,18 +239,18 @@ def prime(fifoname):
     session = sc.find_new_session(l1, l2)
     sys.stderr.write('target session = %s\n' % session)
 
-    print 'session: %s' % session
+    print('session: %s' % session)
     return session
 
 
 def ui2(fifoname):
     sys.stderr.write('starting ui2\n')
     sys.stderr.flush()
-    print 'ui2 reading [%s]' % fifoname
+    print('ui2 reading [%s]' % fifoname)
     pipein = open(fifoname, 'r')  # open fifo as stdio object
     while 1:
         line = pipein.readline()[:-1]  # blocks until data sent
-        print line
+        print(line)
 
 
         #print ('Parent %d got "%s" at %s' % (os.getpid(), line, time.time( )))
@@ -349,9 +350,9 @@ def logic(scs, fifoname, fifoname2, session, psession, last_session):
 
     #os.system(SCREEN+' -X split -v')
 
-    print 'run opening [%s]' % fifoname
+    print('run opening [%s]' % fifoname)
     pipein = open(fifoname, 'r')
-    print 'run printing'
+    print('run printing')
     sys.stderr.write("%s %s %s\n" % ((sys.argv)[0], 'ui2', fifoname2))
     sys.stdout.flush()
     scs.screen("-t \"diagnostic window\" '%s' '%s' '%s' '%s'" % (os.getenv('PYTHONBIN'),
@@ -728,18 +729,18 @@ def run(psession):
                 psession = options[1]
                 last_session = options[2]
             if command[0] == "enter":
-                print "entering \"%s\"" % command[1]
+                print("entering \"%s\"" % command[1])
 
                 #os.execvp('screen',['-x',command[1]])
                 #os.system(SCREEN+' -x \"%s\"'%(command[1]))
 
                 attach_session(command[1])
             elif command[0] == 'restart':
-                print 'restarting...'
+                print('restarting...')
                 pass
             elif command[0] == 'new':
                 cmd = SCREEN + ' -m %s' % command[1]
-                print "creating session: [%s]" % cmd
+                print("creating session: [%s]" % cmd)
                 os.popen(cmd)
             else:
                 try:
@@ -758,7 +759,7 @@ def main():
     global tui
     sys.stderr.write('starting..\n')
     if sys.argv == 0:
-        print 'Usage: program [p|ui|ui2] [psession=session or named pipe]'
+        print('Usage: program [p|ui|ui2] [psession=session or named pipe]')
     if (sys.argv)[1][0] == 'p':
         bMenuRemote = False
         try:
@@ -789,7 +790,7 @@ def main():
             #        account = accounts[iaccount]
 
             if account != 'current':
-                print 'Connecting with %s' % account
+                print('Connecting with %s' % account)
                 (user, host) = account.split('@', 1)
                 if host == 'localhost' or host == HOSTNAME:
                     if user == USER:

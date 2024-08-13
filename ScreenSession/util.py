@@ -32,6 +32,9 @@ import traceback
 import re
 import string
 import shlex
+from six.moves import filter
+from six.moves import map
+from six.moves import range
 
 archiveend = ""
 import tempfile
@@ -268,7 +271,7 @@ def archiveme(tmpdir, home, projectsdir, savedir, archiveend, target):
                 t1.add(f, os.path.split(f)[1])
         t1.close()
     except Exception:
-        print 'Failed to archive.'
+        print('Failed to archive.')
         raise
 
 
@@ -343,8 +346,8 @@ def find_in_path(file, path=None):
         path = os.environ.get('PATH', "")
     if type(path) is type(""):
         path = string.split(path, os.pathsep)
-    return filter(os.path.exists, map(lambda dir, file=file: os.path.join(dir,
-                  file), path))
+    return list(filter(os.path.exists, list(map(lambda dir, file=file: os.path.join(dir,
+                  file), path))))
 
 
 def which(file, mode=os.F_OK | os.X_OK, path=None):
@@ -362,8 +365,8 @@ def which(file, mode=os.F_OK | os.X_OK, path=None):
   you can additionally enforce that the file be readable by specifying
   mode = os.F_OK | os.X_OK | os.R_OK.'''
 
-    return filter(lambda path, mode=mode: os.access(path, mode),
-                  find_in_path(file, path))
+    return list(filter(lambda path, mode=mode: os.access(path, mode),
+                  find_in_path(file, path)))
 
 
 def expand_numbers(numstr):
@@ -374,7 +377,7 @@ def expand_numbers(numstr):
     for n in nums:
         try:
             if '-' in n:
-                nmin,nmax = map(int, n.split('-'))
+                nmin,nmax = list(map(int, n.split('-')))
                 for n_j in range(nmin, nmax + 1):
                     n_nums.append('%s' % n_j)
             else:

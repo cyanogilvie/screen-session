@@ -82,7 +82,7 @@ def main():
             "dir=",
             "help",
             ])
-    except getopt.GetoptError, err:
+    except getopt.GetoptError as err:
         sys.stderr.write(str(err) + '\n')
         doexit(2)
 
