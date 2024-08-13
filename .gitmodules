@@ -1,4 +1,4 @@
 [submodule "escreen"]
 	path = escreen
-	url = ../escreen
+	url = https://github.com/cyanogilvie/escreen
 	branch = escreen
